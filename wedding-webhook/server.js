@@ -9,13 +9,13 @@ const VendorSelection = require("./models/vendor_selection");
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Allow Google Apps Script requests
+app.use(cors({ origin: "*" })); // Allow Google Apps Script requests
 
-// 🔹 Connect to MongoDB
+// 🔹 Connect to MongoDB (Ensure correct URI)
 mongoose
-  .connect("mongodb+srv://vickylydy:7OMAeohxUSAP5P6U@wddingcluster.5djus.mongodb.net/", {
+  .connect("mongodb+srv://vickylydy:7OMAeohxUSAP5P6U@wddingcluster.5djus.mongodb.net/weddingDB", {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
   })
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
@@ -34,11 +34,13 @@ app.post("/", async (req, res) => {
     const newEntry = new Model(formData);
     await newEntry.save();
 
-    res.status(200).json({ message: "Data saved to MongoDB!" });
+    res.status(200).json({ message: "✅ Data saved to MongoDB!" });
   } catch (err) {
     console.error("❌ Error:", err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "❌ Server error" });
   }
 });
 
-app.listen(3000, () => console.log("🚀 Server running on port 3000"));
+// 🔹 Start Server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
