@@ -40,6 +40,14 @@ mongoose
       res.status(500).json({ error: "❌ Server error" });
     }
   });  
+  mongoose.connection.on("connected", () => {
+    console.log("✅ Successfully connected to MongoDB!");
+  });
+  
+  mongoose.connection.on("error", (err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+  });
+  
 
 // 🔹 Start Server
 const PORT = process.env.PORT || 10000;
